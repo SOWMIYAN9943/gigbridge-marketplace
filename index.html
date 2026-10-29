@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GigBridge — Student Skill Marketplace</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --site-primary: #2457E6;
+  --site-secondary: #B8F36B;
+  --site-background: #F5F7FC;
+  --site-on-primary: #FFFFFF;
+  --site-on-secondary: #17230D;
+  --site-on-background: #17213A;
+  --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-font-heading: Inter, ui-sans-serif, system-ui, sans-serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+  --surface: light-dark(#FFFFFF, #171D2D);
+  --soft: light-dark(#EAF0FF, #242D43);
+  --muted: light-dark(#64708A, #B0BAD0);
+  --border: light-dark(#DCE3F2, #35405A);
+  --shadow: 0 14px 36px rgba(30,50,100,.08);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--site-background); color: var(--site-on-background); font-family: var(--site-font-body); line-height: 1.55; }
+#app { min-height: 100vh; width: 100%; border-radius: 0; background-color: var(--site-background); color: var(--site-on-background); overflow: hidden; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+.wrap { width: min(1160px, calc(100% - 36px)); margin: 0 auto; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: calc(18px * var(--site-spacing-scale)) 0; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 850; font-size: 1.2rem; letter-spacing: -.04em; }
+.logo { display: grid; place-items: center; width: 42px; height: 42px; border-radius: calc(13px * var(--site-radius-scale)); background: var(--site-primary); color: var(--site-on-primary); font-size: 1.2rem; }
+.nav { display: flex; align-items: center; gap: 20px; color: var(--muted); font-size: .93rem; }
+.nav a:hover { color: var(--site-primary); }
+.btn { border: 0; border-radius: calc(12px * var(--site-radius-scale)); padding: 11px 16px; display: inline-flex; justify-content: center; align-items: center; gap: 8px; font-weight: 750; }
+.primary { background: var(--site-primary); color: var(--site-on-primary); }
+.lime { background: var(--site-secondary); color: var(--site-on-secondary); }
+.outline { border: 1px solid var(--border); background: var(--surface); color: var(--site-on-background); }
+.hero { background: var(--site-primary); color: var(--site-on-primary); padding: clamp(36px, 6vw, 72px) 0 48px; }
+.hero-grid { display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; gap: 36px; }
+.kicker { display: inline-flex; gap: 8px; align-items: center; background: #ffffff1c; border: 1px solid #ffffff38; border-radius: 999px; padding: 6px 11px; font-size: .82rem; font-weight: 700; }
+h1, h2, h3 { line-height: 1.12; letter-spacing: -.04em; }
+.hero h1 { font-size: calc(clamp(2.4rem, 5.3vw, 4.5rem) * var(--site-heading-scale)); margin: 20px 0; max-width: 760px; }
+.hero p { font-size: 1.06rem; color: #e5eaff; max-width: 650px; }
+.search { display: flex; gap: 8px; background: white; border-radius: calc(15px * var(--site-radius-scale)); padding: 7px; margin-top: 25px; max-width: 650px; box-shadow: var(--shadow); }
+.search input { flex: 1; min-width: 0; border: 0; outline: 0; padding: 10px 12px; color: #17213A; background: white; }
+.hero-aside { border: 1px solid #ffffff38; background: #ffffff13; border-radius: calc(24px * var(--site-radius-scale)); padding: 25px; }
+.orb { font-size: 2.8rem; }
+.hero-aside h2 { font-size: 1.5rem; margin: 10px 0; }
+.hero-aside p { font-size: .94rem; margin: 0; }
+.mini-stats { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 22px; }
+.mini-stats strong { display: block; font-size: 1.05rem; }
+.mini-stats span { font-size: .78rem; color: #d8e0ff; }
+.section { padding: calc(38px * var(--site-spacing-scale)) 0; }
+.section-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; margin-bottom: 20px; }
+.section-head h2 { font-size: calc(1.8rem * var(--site-heading-scale)); margin: 0; }
+.section-head p { margin: 7px 0 0; color: var(--muted); }
+.muted { color: var(--muted); }
+.categories { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 12px; }
+.cat { border: 1px solid var(--border); background: var(--surface); color: var(--site-on-background); border-radius: calc(16px * var(--site-radius-scale)); padding: 17px 10px; text-align: center; transition: transform .15s, border-color .15s; }
+.cat:hover, .cat.active { transform: translateY(-2px); border-color: var(--site-primary); }
+.cat .emoji { font-size: 1.8rem; display: block; margin-bottom: 8px; }
+.cat strong { font-size: .85rem; display: block; }
+.cat small { color: var(--muted); font-size: .74rem; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.filter { border: 1px solid var(--border); background: var(--surface); color: var(--site-on-background); padding: 8px 12px; border-radius: 999px; font-size: .85rem; }
+.filter.active { background: var(--site-primary); color: var(--site-on-primary); border-color: var(--site-primary); }
+.gigs { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 18px; }
+.gig { background: var(--surface); border: 1px solid var(--border); border-radius: calc(18px * var(--site-radius-scale)); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; min-width: 0; }
+.gig-art { min-height: 125px; display: grid; place-items: center; font-size: 3rem; }
+.art-blue { background: linear-gradient(135deg,#DCE6FF,#9CB6FF); }
+.art-pink { background: linear-gradient(135deg,#FFE1EC,#FFACCB); }
+.art-green { background: linear-gradient(135deg,#E1F8D3,#A8E58D); }
+.art-orange { background: linear-gradient(135deg,#FFE9CC,#FFBC7C); }
+.art-purple { background: linear-gradient(135deg,#E9DFFF,#C4AEFF); }
+.art-cyan { background: linear-gradient(135deg,#D6F8FA,#91DFE8); }
+.gig-body { padding: 17px; display: flex; flex-direction: column; flex: 1; }
+.seller { display: flex; align-items: center; gap: 9px; font-size: .84rem; }
+.avatar { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--soft); font-weight: 800; color: var(--site-primary); }
+.seller small { color: var(--muted); display: block; }
+.gig h3 { font-size: 1rem; line-height: 1.4; margin: 14px 0 9px; }
+.gig-foot { margin-top: auto; border-top: 1px solid var(--border); padding-top: 13px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.gig-foot small { color: var(--muted); }
+.price { font-weight: 850; font-size: 1.1rem; }
+.empty { grid-column: 1/-1; text-align: center; border: 1px dashed var(--border); border-radius: 18px; padding: 36px; color: var(--muted); }
+.panel { background: var(--soft); border: 1px solid var(--border); border-radius: calc(22px * var(--site-radius-scale)); padding: clamp(22px, 4vw, 32px); display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.panel h2 { margin: 0 0 8px; }
+.panel p { color: var(--muted); margin: 0; }
+.calc-input { width: min(100%, 280px); padding: 12px; border: 1px solid var(--border); border-radius: 11px; background: var(--surface); color: var(--site-on-background); }
+.calc-results { display: grid; gap: 12px; min-width: 220px; }
+.adsense { width: min(970px, calc(100% - 36px)); min-height: 100px; margin: 28px auto; padding: 22px; border: 1px dashed var(--border); border-radius: 12px; background: var(--surface); color: var(--muted); text-align: center; display: grid; place-content: center; gap: 4px; font-size: .82rem; }
+.adsense strong { font-size: .7rem; letter-spacing: .12em; }
+footer { border-top: 1px solid var(--border); padding: 22px 0 30px; color: var(--muted); font-size: .84rem; }
+.foot { display: flex; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
+.modal-backdrop { position: fixed; inset: 0; background: #07102299; display: none; align-items: center; justify-content: center; padding: 18px; z-index: 10; }
+.modal-backdrop.open { display: flex; }
+.modal { background: var(--surface); color: var(--site-on-background); width: min(520px,100%); max-height: 90vh; overflow: auto; border: 1px solid var(--border); border-radius: 22px; padding: 24px; box-shadow: 0 24px 70px #0004; }
+.modal-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.modal h2 { margin: 0; }
+.field { display: grid; gap: 6px; margin-top: 14px; }
+.field label { font-weight: 700; font-size: .88rem; }
+.field input, .field select, .field textarea { border: 1px solid var(--border); border-radius: 10px; background: var(--site-background); color: var(--site-on-background); padding: 11px; width: 100%; }
+.field textarea { min-height: 84px; resize: vertical; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 18px; }
+.toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: #17213A; color: white; padding: 12px 18px; border-radius: 12px; box-shadow: var(--shadow); display: none; z-index: 20; max-width: calc(100% - 30px); }
+.toast.show { display: block; }
+@media (max-width: 850px) { .hero-grid { grid-template-columns: 1fr; } .hero-aside { max-width: 540px; } .categories { grid-template-columns: repeat(3,minmax(0,1fr)); } .gigs { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 570px) { .nav a { display: none; } .hero h1 { font-size: 2.7rem; } .search { flex-wrap: wrap; } .search input, .search .btn { flex-basis: 100%; width: 100%; } .categories, .gigs { grid-template-columns: 1fr; } .section-head { align-items: flex-start; flex-direction: column; } }
+</style>
+</head>
+<body>
+<div id="app">
+<header class="wrap top">
+  <a href="#home" class="brand"><span class="logo">G↗</span><span>GigBridge <small class="muted" style="display:block;font-size:.67rem;letter-spacing:.08em">SKILLS MEET OPPORTUNITY</small></span></a>
+  <nav class="nav" aria-label="Main navigation"><a href="#explore">Explore services</a><a href="#how">How it works</a><a href="#earn">Earnings</a><button class="btn primary" id="postTop">＋ Offer a service</button></nav>
+</header>
+<section class="hero" id="home"><div class="wrap hero-grid"><div>
+  <span class="kicker">🇮🇳 Made for Indian college students</span>
+  <h1>College skills. Real opportunities. <span style="color:var(--site-secondary)">GigBridge.</span></h1>
+  <p>Find student-friendly services—or earn from skills you already have. Explore tutoring, presentation design, proofreading, document formatting, coding guidance, and mini-project mentoring.</p>
+  <form class="search" id="searchForm"><input id="searchInput" aria-label="Search services" placeholder="Try Python tutoring, PPT design, proofreading"><button class="btn lime" type="submit">⌕ Search services</button></form>
+  <div class="mini-stats"><div><strong>✨ Learn and share</strong><span>Useful student skills</span></div><div><strong>🤝 Clear offers</strong><span>Understand the service</span></div><div><strong>🚀 Start small</strong><span>Grow your portfolio</span></div></div>
+</div><aside class="hero-aside"><div class="orb">🧑‍💻 ✦ 🎓</div><h2>Your next semester, supported.</h2><p>Browse sample offers, compare prices, and see how a student skill marketplace could work. This is a prototype: it does not handle real accounts, orders, or payments.</p></aside></div></section>
+<main class="wrap">
+<section class="section" id="explore"><div class="section-head"><div><h2>Explore student services</h2><p>Choose a category or search for a specific skill.</p></div><span class="muted">Demo marketplace · v1</span></div>
+<div class="categories" id="categories">
+<button class="cat" data-cat="Presentation Design"><span class="emoji">📊</span><strong>Presentation design</strong><small>Slides & layouts</small></button>
+<button class="cat" data-cat="Tutoring"><span class="emoji">🧑‍🏫</span><strong>Tutoring</strong><small>Concepts & practice</small></button>
+<button class="cat" data-cat="Proofreading"><span class="emoji">📝</span><strong>Proofreading</strong><small>Grammar & clarity</small></button>
+<button class="cat" data-cat="Coding Help"><span class="emoji">💻</span><strong>Coding guidance</strong><small>Debug & learn</small></button>
+<button class="cat" data-cat="Project Guidance"><span class="emoji">🧪</span><strong>Project mentoring</strong><small>Plan & build</small></button>
+<button class="cat" data-cat="Formatting"><span class="emoji">📄</span><strong>Document formatting</strong><small>Reports & records</small></button>
+</div></section>
+<section class="section" style="padding-top:4px"><div class="section-head"><div><h2>Popular sample offers</h2><p>These example listings are illustrative, not real sellers or reviews.</p></div><div class="filters" id="filters"><button class="filter active" data-filter="All">All</button><button class="filter" data-filter="Presentation Design">PPT design</button><button class="filter" data-filter="Tutoring">Tutoring</button><button class="filter" data-filter="Proofreading">Proofreading</button><button class="filter" data-filter="Coding Help">Coding help</button><button class="filter" data-filter="Project Guidance">Projects</button></div></div><div class="gigs" id="gigs"></div></section>
+<section class="section" id="earn"><div class="section-head"><div><h2>How GigBridge could earn</h2><p>Adjust the example order value to estimate a possible platform commission.</p></div><span class="muted">Planning example only</span></div><div class="panel"><div style="flex:1;min-width:230px"><label for="orderAmount" style="display:block;font-weight:750;margin-bottom:8px">Example order price (INR ₹)</label><input class="calc-input" id="orderAmount" type="number" min="1" max="1000000" value="1000"><p style="margin-top:10px;font-size:.85rem">Example commission rate: 10%</p></div><div class="calc-results"><div><small class="muted">Platform commission</small><div class="price" id="commissionEarned">₹100.00</div></div><div><small class="muted">Seller receives before other fees/taxes</small><div class="price" id="sellerReceives">₹900.00</div></div></div></div><p class="muted" style="font-size:.82rem;margin-top:10px">Before accepting real orders, disclose fees and plan for refunds, payment-provider rules, taxes, and applicable Indian laws.</p></section>
+<section class="section" id="how"><div class="panel"><div><h2>Have a skill worth sharing? 🌱</h2><p>Offer tutoring, slide design, proofreading, formatting, or guidance that helps someone learn. Don’t sell completed graded work for another student to submit as their own.</p></div><button class="btn primary" id="postBottom">＋ Create a demo listing</button></div></section>
+</main>
+<div class="adsense" aria-label="Advertisement placeholder"><strong>ADVERTISEMENT</strong><span>AdSense placement planned — no real ads are running in this preview.</span></div>
+<footer><div class="wrap foot"><span><strong>GigBridge</strong> · Student skill marketplace concept</span><span>Demo only · No real accounts, orders, or payments</span></div></footer>
+<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal"><div class="modal-top"><h2 id="modalTitle">Offer a service</h2><button class="btn outline" id="closeModal" aria-label="Close dialog">✕</button></div><p class="muted">Create a sample listing to test the marketplace idea.</p><form id="gigForm">
+<div class="field"><label for="sellerName">Display name</label><input id="sellerName" required maxlength="50" placeholder="e.g. Alex Studio"></div>
+<div class="field"><label for="gigTitle">Service title</label><input id="gigTitle" required maxlength="100" placeholder="I will explain Python loops with examples"></div>
+<div class="field"><label for="gigCategory">Category</label><select id="gigCategory"><option>Presentation Design</option><option>Tutoring</option><option>Proofreading</option><option>Coding Help</option><option>Project Guidance</option><option>Formatting</option></select></div>
+<div class="field"><label for="gigPrice">Starting price (demo INR ₹)</label><input id="gigPrice" type="number" min="1" max="100000" value="299" required></div>
+<div class="field"><label for="gigDescription">Short description</label><textarea id="gigDescription" maxlength="220" placeholder="What will the buyer receive?"></textarea></div>
+<div class="modal-actions"><button type="button" class="btn outline" id="cancelModal">Cancel</button><button type="submit" class="btn primary">Add demo listing</button></div>
+</form></div></div><div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div>
+<script>
+const seed = [
+  {seller:'SlideCraft Student', title:'I will design a polished college presentation from your content', category:'Presentation Design', price:299, art:'📊', tone:'art-blue', desc:'Clean, readable slides using your own notes and content.'},
+  {seller:'LearnWithArun', title:'I will tutor you in Python basics and explain errors step by step', category:'Tutoring', price:250, art:'🧑‍🏫', tone:'art-pink', desc:'Concept explanations and practice to help you learn independently.'},
+  {seller:'ClearDraft', title:'I will proofread your report for grammar and clarity', category:'Proofreading', price:199, art:'📝', tone:'art-green', desc:'Helpful corrections while keeping your ideas and work yours.'},
+  {seller:'CodeBuddy', title:'I will help debug your code and explain possible fixes', category:'Coding Help', price:299, art:'💻', tone:'art-purple', desc:'Understand errors and learn debugging techniques.'},
+  {seller:'ProjectPath', title:'I will mentor you to plan your college mini-project', category:'Project Guidance', price:399, art:'🧪', tone:'art-orange', desc:'Project scope, milestones, resources, and feedback.'},
+  {seller:'DocReady', title:'I will format your lab report or project document neatly', category:'Formatting', price:149, art:'📄', tone:'art-cyan', desc:'Consistent headings, spacing, page numbers, and layout.'}
+];
+let gigs = [...seed];
+let activeFilter = 'All';
+let activeCategory = '';
+let query = '';
+const gigsEl = document.getElementById('gigs');
+function escapeHtml(value) { return String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])); }
+function showToast(message) { const toast = document.getElementById('toast'); toast.textContent = message; toast.classList.add('show'); window.clearTimeout(window.toastTimer); window.toastTimer = window.setTimeout(() => toast.classList.remove('show'), 3600); }
+function render() {
+  const list = gigs.filter(g => (activeFilter === 'All' || g.category === activeFilter) && (!activeCategory || g.category === activeCategory) && (`${g.title} ${g.seller} ${g.category} ${g.desc || ''}`).toLowerCase().includes(query.toLowerCase()));
+  gigsEl.innerHTML = '';
+  if (!list.length) { gigsEl.innerHTML = '<div class="empty">🔎 No services match that search.<br>Try another keyword or choose All.</div>'; return; }
+  list.forEach(g => {
+    const card = document.createElement('article');
+    card.className = 'gig';
+    card.innerHTML = `<div class="gig-art ${g.tone || 'art-blue'}"><span>${g.art || '✨'}</span></div><div class="gig-body"><div class="seller"><span class="avatar">${escapeHtml(g.seller.slice(0,1).toUpperCase())}</span><div><strong>${escapeHtml(g.seller)}</strong><small>Provider · demo listing</small></div></div><h3>${escapeHtml(g.title)}</h3><p class="muted" style="font-size:.87rem;margin:0 0 14px">${escapeHtml(g.desc || 'A sample service listing.')}</p><div class="gig-foot"><small>STARTING AT</small><span class="price">₹${Number(g.price).toLocaleString('en-IN')}</span></div><button class="btn outline details" style="margin-top:13px;width:100%" type="button">View service details →</button></div>`;
+    card.querySelector('.details').addEventListener('click', () => showToast('Demo only: profiles, messaging, checkout, and secure payments are not connected yet.'));
+    gigsEl.appendChild(card);
+  });
+}
+function setFilter(value) {
+  activeFilter = value; activeCategory = '';
+  document.querySelectorAll('.filter').forEach(button => button.classList.toggle('active', button.dataset.filter === value));
+  document.querySelectorAll('.cat').forEach(button => button.classList.remove('active'));
+  render();
+}
+document.querySelectorAll('.filter').forEach(button => button.addEventListener('click', () => setFilter(button.dataset.filter)));
+document.querySelectorAll('.cat').forEach(button => button.addEventListener('click', () => {
+  activeCategory = button.dataset.cat; activeFilter = 'All'; query = '';
+  document.getElementById('searchInput').value = '';
+  document.querySelectorAll('.filter').forEach(item => item.classList.toggle('active', item.dataset.filter === 'All'));
+  document.querySelectorAll('.cat').forEach(item => item.classList.toggle('active', item === button));
+  render(); document.getElementById('gigs').scrollIntoView({behavior:'smooth', block:'start'});
+}));
+document.getElementById('searchForm').addEventListener('submit', event => {
+  event.preventDefault(); query = document.getElementById('searchInput').value.trim(); activeFilter = 'All'; activeCategory = '';
+  document.querySelectorAll('.filter').forEach(item => item.classList.toggle('active', item.dataset.filter === 'All'));
+  document.querySelectorAll('.cat').forEach(item => item.classList.remove('active'));
+  render(); document.getElementById('gigs').scrollIntoView({behavior:'smooth', block:'start'});
+});
+const backdrop = document.getElementById('modalBackdrop');
+function openModal() { backdrop.classList.add('open'); document.getElementById('sellerName').focus(); }
+function closeModal() { backdrop.classList.remove('open'); }
+document.getElementById('postTop').addEventListener('click', openModal);
+document.getElementById('postBottom').addEventListener('click', openModal);
+document.getElementById('closeModal').addEventListener('click', closeModal);
+document.getElementById('cancelModal').addEventListener('click', closeModal);
+backdrop.addEventListener('click', event => { if (event.target === backdrop) closeModal(); });
+document.addEventListener('keydown', event => { if (event.key === 'Escape') closeModal(); });
+const amount = document.getElementById('orderAmount');
+function updateCommission() {
+  const value = Math.min(1000000, Math.max(0, Number(amount.value) || 0));
+  document.getElementById('commissionEarned').textContent = '₹' + (value * .10).toLocaleString('en-IN', {minimumFractionDigits:2, maximumFractionDigits:2});
+  document.getElementById('sellerReceives').textContent = '₹' + (value * .90).toLocaleString('en-IN', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+amount.addEventListener('input', updateCommission);
+document.getElementById('gigForm').addEventListener('submit', event => {
+  event.preventDefault();
+  const seller = document.getElementById('sellerName').value.trim();
+  const title = document.getElementById('gigTitle').value.trim();
+  const category = document.getElementById('gigCategory').value;
+  const price = Number(document.getElementById('gigPrice').value);
+  const desc = document.getElementById('gigDescription').value.trim();
+  const icons = {'Presentation Design':['📊','art-blue'], 'Tutoring':['🧑‍🏫','art-pink'], 'Proofreading':['📝','art-green'], 'Coding Help':['💻','art-purple'], 'Project Guidance':['🧪','art-orange'], 'Formatting':['📄','art-cyan']};
+  gigs.unshift({seller, title, category, price, desc, art:icons[category][0], tone:icons[category][1]});
+  closeModal(); event.target.reset(); document.getElementById('gigPrice').value = 299; setFilter('All');
+  showToast('Demo listing added on this page only. It is not saved to a server.');
+  document.getElementById('gigs').scrollIntoView({behavior:'smooth', block:'start'});
+});
+updateCommission();
+render();
+</script>
+</body>
+</html>
